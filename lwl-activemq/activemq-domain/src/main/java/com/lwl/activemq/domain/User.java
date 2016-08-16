@@ -1,7 +1,11 @@
 package com.lwl.activemq.domain;
 
 import java.io.Serializable;
-
+/**
+ * 用户测试类
+ * @author Administrator
+ *
+ */
 public class User implements Serializable{
 
 	private static final long serialVersionUID = 1L;

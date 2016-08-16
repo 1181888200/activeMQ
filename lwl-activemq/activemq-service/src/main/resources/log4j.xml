@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration debug="true" threshold="all">
+	<!-- Appenders -->
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%r [%t] %-5p %c: - %m%n" />
+		</layout>
+	</appender>
+	<appender name="FILE_Appender" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="File" value="C:/log/lwl_activemq_service/lwl_activemq_service.log" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd hh:mm:ss}:%p %t %c - %m%n" />
+		</layout>
+	</appender>
+	<appender name="SQL_Appender" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="File" value="C:/log/lwl_activemq_service/lwl_activemq_service_sql.log" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd hh:mm:ss}:%p %t %c - %m%n" />
+		</layout>
+	</appender>
+	<appender name="Error_Appender" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="File" value="C:/log/lwl_activemq_service/lwl_activemq_service_error.log" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd hh:mm:ss}:%p %t %c - %m%n" />
+		</layout>
+	</appender>
+	<appender name="Remote_Call_Appender" class="org.apache.log4j.RollingFileAppender">
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="File"
+			value="C:/log/lwl_activemq_service/lwl_activemq_service_remote_call.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd" />
+		<param name="MaxBackupIndex" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd hh:mm:ss}:%p %t %c - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Loggers -->
+	<logger name="ERROR_LOGGER" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="Error_Appender" />
+	</logger>
+	<logger name="SQL_LOGGER" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="SQL_Appender" />
+	</logger>
+	<logger name="REMOTE_CALL_LOGGER" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="Remote_Call_Appender" />
+	</logger>
+	<logger name="ALIAPY_MQ_PUSH_LISTENER" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="Remote_Call_Appender" />
+	</logger>
+	<logger name="com.lwl" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="FILE_Appender" />
+	</logger>
+	<logger name="java.sql.Connection" additivity="true">
+		<level value="DEBUG" />
+		<appender-ref ref="SQL_Appender" />
+	</logger>
+	<logger name="java.sql.Statement" additivity="true">
+		<level value="INFO" />
+		<appender-ref ref="SQL_Appender" />
+	</logger>
+	<logger name="java.sql.PreparedStatement" additivity="true">
+		<level value="DEBUG" />
+		<appender-ref ref="SQL_Appender" />
+	</logger>
+	<logger name="java.sql.ResultSet" additivity="true">
+		<level value="INFO" />
+		<appender-ref ref="SQL_Appender" />
+	</logger>
+
+	<root>
+		<level value="WARN" />
+		<appender-ref ref="CONSOLE" />
+	</root>
+</log4j:configuration>

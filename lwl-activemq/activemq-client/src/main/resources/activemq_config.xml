@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jms="http://www.springframework.org/schema/jms"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+     http://www.springframework.org/schema/context  
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+    http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">  
+     
+    <!-- 内部统一使用的MQ地址 -->
+    <bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616"/>
+    </bean>
+    <bean id="connectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">  
+        <property name="connectionFactory" ref="targetConnectionFactory"/>  
+        <property name="maxConnections" value="50"/>
+    </bean>
+    <!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">  
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+
+   <!-- 推送给用户信息 -->
+	<bean id="userPushListenerMQ" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>user.service.queue</value>
+		</constructor-arg>
+	</bean>
+	<!-- 推送给新闻信息 -->
+	<bean id="newsPushListenerMQ" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>news.service.queue</value>
+		</constructor-arg>
+	</bean>
+	<!-- 推送给客户信息 -->
+	<bean id="clientPushListenerMQ" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>client.service.queue</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 用户接受推送 -->
+    <bean id="userPushListenerConsumer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="userPushListenerMQ" />
+        <property name="messageListener" ref="userPushListener" />
+    </bean>
+    
+	<!-- 新闻接受推送 -->
+    <bean id="newsPushListenerConsumer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="newsPushListenerMQ" />
+        <property name="messageListener" ref="newsPushListener" />
+    </bean>
+    
+	<!-- 客户接受推送 -->
+    <bean id="clientPushListenerConsumer"
+          class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destination" ref="clientPushListenerMQ" />
+        <property name="messageListener" ref="clientPushListener" />
+    </bean>
+</beans>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+     http://www.springframework.org/schema/context  
+     http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+    http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.0.xsd">
+
+	<!-- 这里暴露内部统一使用的MQ地址 -->
+	<bean id="internalTargetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+	</bean>
+	<bean id="internalConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<property name="connectionFactory" ref="internalTargetConnectionFactory" />
+		<property name="maxConnections" value="20" />
+	</bean>
+	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
+	<bean id="internalJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="internalConnectionFactory" />
+	</bean>
+
+	<!-- 推送给用户信息 -->
+	<bean id="userServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>user.service.queue</value>
+		</constructor-arg>
+	</bean>
+	<!-- 推送给新闻信息 -->
+	<bean id="newsServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>news.service.queue</value>
+		</constructor-arg>
+	</bean>
+	<!-- 推送给客户信息 -->
+	<bean id="clientServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>client.service.queue</value>
+		</constructor-arg>
+	</bean>
+
+	 
+</beans>

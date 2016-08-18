@@ -23,6 +23,9 @@ public class UserPushServiceImpl implements PushService {
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	
+	/**
+	 * 这里是根据MQ配置文件定义的queue来注入的，也就是这里将会把不同的内容推送到不同的queue中
+	 */
 	@Autowired
 	@Qualifier("userServiceQueue")
 	private Destination destination;

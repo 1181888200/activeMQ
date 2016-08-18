@@ -23,19 +23,19 @@
 		<property name="connectionFactory" ref="internalConnectionFactory" />
 	</bean>
 
-	<!-- 推送给用户信息 -->
+	<!-- 推送给用户信息  创建一个Queue-->
 	<bean id="userServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg>
 			<value>user.service.queue</value>
 		</constructor-arg>
 	</bean>
-	<!-- 推送给新闻信息 -->
+	<!-- 推送给新闻信息   创建一个Queue-->
 	<bean id="newsServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg>
 			<value>news.service.queue</value>
 		</constructor-arg>
 	</bean>
-	<!-- 推送给客户信息 -->
+	<!-- 推送给客户信息   创建一个Queue-->
 	<bean id="clientServiceQueue" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg>
 			<value>client.service.queue</value>
